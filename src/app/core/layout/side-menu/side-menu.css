@@ -1,0 +1,34 @@
+.side-menu {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.menu-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px;
+
+  .logo-icon {
+    color: var(--mat-primary);
+    font-size: 28px;
+    width: 28px;
+    height: 28px;
+  }
+
+  .logo-text {
+    font-size: 16px;
+    font-weight: 600;
+  }
+}
+
+.active-link {
+  background-color: rgba(0, 0, 0, 0.08) !important;
+  color: var(--mat-primary) !important;
+  border-radius: 4px;
+
+  mat-icon {
+    color: var(--mat-primary);
+  }
+}

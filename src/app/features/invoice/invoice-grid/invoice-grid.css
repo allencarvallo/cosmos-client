@@ -1,0 +1,15 @@
+mat-card-header {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-bottom: 12px;
+
+  .spacer { flex: 1 1 auto; }
+}
+
+.table-container {
+  overflow-y: auto;
+  max-height: calc(100vh - 200px); 
+  width: 100%;
+}
