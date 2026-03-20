@@ -1,1 +1,60 @@
-<p>customer-grid works!</p>
+<mat-card>
+  <mat-card-header>
+    <span class="header-title">Customer List</span>
+    <span class="spacer"></span>
+    <button mat-button="filled" (click)="addCustomer()">
+      <mat-icon>add</mat-icon>Add Customer
+    </button>
+  </mat-card-header>
+
+  <mat-divider></mat-divider>
+
+  <mat-card-content>
+    @if (loading()) {
+      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    }
+
+    <div class="table-container">
+      <table mat-table [dataSource]="customerList" matSort>
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+          <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="phone">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Phone</th>
+          <td mat-cell *matCellDef="let element">{{ element.phone }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="email">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
+          <td mat-cell *matCellDef="let element">{{ element.email }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="description">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Description</th>
+          <td mat-cell *matCellDef="let element">{{ element.description }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let element" class="actions-cell">
+            <button mat-icon-button (click)="editCustomer(element)">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button color="warn" (click)="deleteCustomer(element.customerId)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="customerCols; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: customerCols" class="table-row"></tr>
+
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell no-data" [colSpan]="customerCols.length">No customers found.</td>
+        </tr>
+      </table>
+    </div>
+  </mat-card-content>
+</mat-card>

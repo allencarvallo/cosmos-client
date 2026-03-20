@@ -1,0 +1,136 @@
+<h2 mat-dialog-title>Add Invoice</h2>
+
+<mat-dialog-content>
+  <div class="form-wrapper">
+
+    <!-- Invoice Header -->
+    <div class="form-grid">
+
+      <mat-form-field appearance="outline">
+        <mat-label>Customer</mat-label>
+        <mat-select [formField]="invoiceForm.customerId">
+          @for (customer of customers(); track customer.customerId) {
+            <mat-option [value]="customer.customerId">{{ customer.name }}</mat-option>
+          }
+        </mat-select>
+        @if (invoiceForm.customerId().touched()) {
+          @for (error of invoiceForm.customerId().errors(); track error.kind) {
+            <mat-error>{{ error.message }}</mat-error>
+          }
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Invoice Date</mat-label>
+        <input matInput type="date" [formField]="invoiceForm.invoiceDate" />
+        @if (invoiceForm.invoiceDate().touched()) {
+          @for (error of invoiceForm.invoiceDate().errors(); track error.kind) {
+            <mat-error>{{ error.message }}</mat-error>
+          }
+        }
+      </mat-form-field>
+
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <!-- Line Items -->
+    <div class="items-section">
+      <div class="items-header">
+        <span class="items-title">Line Items</span>
+        <button mat-button type="button" (click)="addItem()">
+          <mat-icon>add</mat-icon> Add Item
+        </button>
+      </div>
+
+      <div class="item-row item-row-header">
+        <span class="col-desc">Description</span>
+        <span class="col-num">Qty</span>
+        <span class="col-num">Rate</span>
+        <span class="col-num">Amount</span>
+        <span class="col-action"></span>
+      </div>
+
+      @for (item of invoiceItems(); track $index) {
+        <div class="item-row">
+
+          <mat-form-field appearance="outline" class="col-desc">
+            <input
+              matInput
+              placeholder="Description"
+              [value]="item.description"
+              (input)="updateItem($index, 'description', $any($event.target).value)"
+            />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="col-num">
+            <input
+              matInput
+              type="number"
+              min="1"
+              placeholder="Qty"
+              [value]="item.quantity"
+              (input)="updateItem($index, 'quantity', +$any($event.target).value)"
+            />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="col-num">
+            <input
+              matInput
+              type="number"
+              min="0"
+              placeholder="Rate"
+              [value]="item.rate"
+              (input)="updateItem($index, 'rate', +$any($event.target).value)"
+            />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="col-num">
+            <input
+              matInput
+              type="number"
+              placeholder="Amount"
+              [value]="item.amount"
+              readonly
+            />
+          </mat-form-field>
+
+          <button
+            mat-icon-button
+            type="button"
+            color="warn"
+            class="col-action"
+            [disabled]="invoiceItems().length === 1"
+            (click)="removeItem($index)"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+
+        </div>
+      }
+    </div>
+
+    <!-- Total -->
+    <div class="total-row">
+      <span class="total-label">Total Amount</span>
+      <span class="total-value">₹{{ invoiceModel().invoiceAmount.toFixed(2) }}</span>
+    </div>
+
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button type="button" (click)="cancel()" [disabled]="saving()">Cancel</button>
+  <button
+    mat-flat-button
+    color="primary"
+    (click)="save()"
+    [disabled]="invoiceForm().invalid() || invoiceItems().length === 0 || saving()"
+  >
+    @if (saving()) {
+      <mat-progress-spinner diameter="18" mode="indeterminate"></mat-progress-spinner>
+    } @else {
+      Save Invoice
+    }
+  </button>
+</mat-dialog-actions>
