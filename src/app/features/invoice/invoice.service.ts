@@ -27,4 +27,8 @@ export class InvoiceService {
   delete(invoiceId: number) {
     return this.http.delete(`invoices/${invoiceId}`);
   }
+
+  downloadPdf(invoiceId: number) {
+    return this.http.getBlob(`invoices/${invoiceId}/pdf`);
+  }
 }

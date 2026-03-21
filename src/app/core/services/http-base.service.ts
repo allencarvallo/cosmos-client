@@ -25,4 +25,10 @@ export class HttpBaseService {
   delete<T>(endpoint: string) {
     return this.http.delete<T>(`${this.baseUrl}/${endpoint}`);
   }
+
+  getBlob(endpoint: string) {
+    return this.http.get(`${this.baseUrl}/${endpoint}`, {
+      responseType: 'blob',
+    });
+  }
 }

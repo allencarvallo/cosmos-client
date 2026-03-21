@@ -78,4 +78,15 @@ export class InvoiceGrid {
   editInvoice(element: any): void {}
 
   deleteInvoice(invoiceId: number): void {}
+
+  downloadInvoice(invoiceId: number) {
+    this.invoiceService.downloadPdf(invoiceId).subscribe((blob) => {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Invoice-${invoiceId}.pdf`;
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+  }
 }
