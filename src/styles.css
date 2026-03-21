@@ -1,1 +1,22 @@
 /* You can add global styles to this file, and also import other style files */
+.toast-success {
+  .mdc-snackbar__surface {
+    background-color: #22c55e !important;
+  }
+
+  .mdc-snackbar__label,
+  .mat-mdc-snack-bar-action {
+    color: white !important;
+  }
+}
+
+.toast-error {
+  .mdc-snackbar__surface {
+    background-color: #ef4444 !important;
+  }
+
+  .mdc-snackbar__label,
+  .mat-mdc-snack-bar-action {
+    color: white !important;
+  }
+}
