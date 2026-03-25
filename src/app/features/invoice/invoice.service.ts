@@ -17,15 +17,15 @@ export class InvoiceService {
   }
 
   create(req: CreateInvoiceRequest) {
-    return this.http.post<InvoiceResponse>('invoices', req);
+    return this.http.post<boolean>('invoices', req);
   }
 
   update(invoiceId: number, req: CreateInvoiceRequest) {
-    return this.http.put<InvoiceResponse>(`invoices/${invoiceId}`, req);
+    return this.http.put<boolean>(`invoices/${invoiceId}`, req);
   }
 
   delete(invoiceId: number) {
-    return this.http.delete(`invoices/${invoiceId}`);
+    return this.http.delete<boolean>(`invoices/${invoiceId}`);
   }
 
   downloadPdf(invoiceId: number) {

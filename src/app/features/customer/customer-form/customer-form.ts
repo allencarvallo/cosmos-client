@@ -12,6 +12,7 @@ import { MatInput } from '@angular/material/input';
 import { MatButton } from '@angular/material/button';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { CreateCustomerRequest, CustomerFormModel } from '../customer.model';
+import { ToastService } from '../../../shared/services/toast.service';
 
 @Component({
   selector: 'app-customer-form',
@@ -33,6 +34,7 @@ import { CreateCustomerRequest, CustomerFormModel } from '../customer.model';
 export class CustomerForm {
   private dialogRef = inject(MatDialogRef<CustomerForm>);
   private customerService = inject(CustomerService);
+  private toastService = inject(ToastService);
 
   saving = signal(false);
 
@@ -65,9 +67,12 @@ export class CustomerForm {
 
     this.saving.set(true);
     this.customerService.create(req).subscribe({
-      next: (customer) => {
+      next: (res: boolean) => {
+        if (res) {
+          this.toastService.success('Successfully added');
+        }
         this.saving.set(false);
-        this.dialogRef.close(customer);
+        this.dialogRef.close();
       },
       error: () => this.saving.set(false),
     });

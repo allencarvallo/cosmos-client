@@ -1,5 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
-import { form, FormField, FormRoot, min, required } from '@angular/forms/signals';
+import { form, FormField, min, required } from '@angular/forms/signals';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import {
   MatDialogActions,
@@ -22,6 +22,7 @@ import {
   InvoiceFormModel,
   InvoiceItemFormModel,
 } from '../invoice.model';
+import { ToastService } from '../../../shared/services/toast.service';
 
 @Component({
   selector: 'app-invoice-form',
@@ -49,6 +50,7 @@ export class InvoiceForm {
   private dialogRef = inject(MatDialogRef<InvoiceForm>);
   private invoiceService = inject(InvoiceService);
   private customerService = inject(CustomerService);
+  private toastService = inject(ToastService);
 
   customers = signal<CustomerResponse[]>([]);
   saving = signal(false);
@@ -118,9 +120,12 @@ export class InvoiceForm {
 
     this.saving.set(true);
     this.invoiceService.create(req).subscribe({
-      next: (invoice) => {
+      next: (res: boolean) => {
+        if (res) {
+          this.toastService.success('Successfully added');
+        }
         this.saving.set(false);
-        this.dialogRef.close(invoice);
+        this.dialogRef.close();
       },
       error: () => this.saving.set(false),
     });

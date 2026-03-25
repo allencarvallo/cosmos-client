@@ -17,14 +17,14 @@ export class CustomerService {
   }
 
   create(req: CreateCustomerRequest) {
-    return this.http.post<CustomerResponse>('customers', req);
+    return this.http.post<boolean>('customers', req);
   }
 
   update(customerId: number, req: CreateCustomerRequest) {
-    return this.http.put<CustomerResponse>(`customers/${customerId}`, req);
+    return this.http.put<boolean>(`customers/${customerId}`, req);
   }
 
   delete(customerId: number) {
-    return this.http.delete(`customers/${customerId}`);
+    return this.http.delete<boolean>(`customers/${customerId}`);
   }
 }

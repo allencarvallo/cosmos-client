@@ -11,7 +11,6 @@ import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatProgressBar } from '@angular/material/progress-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { CustomerForm } from '../customer-form/customer-form';
-import { ToastService } from '../../../shared/services/toast.service';
 
 @Component({
   selector: 'app-customer-grid',
@@ -36,7 +35,6 @@ export class CustomerGrid {
   private customerService = inject(CustomerService);
   private appState = inject(AppState);
   private dialog = inject(MatDialog);
-  private toast = inject(ToastService);
 
   customerList = new MatTableDataSource<CustomerResponse>([]);
   customerCols: string[] = ['name', 'phone', 'email', 'description', 'actions'];
@@ -73,7 +71,6 @@ export class CustomerGrid {
 
     dialogRef.afterClosed().subscribe(() => {
       this.getCustomerList();
-      this.toast.success('Customer added successfully');
     });
   }
 
