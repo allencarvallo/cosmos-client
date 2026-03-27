@@ -1,0 +1,85 @@
+<h2 mat-dialog-title>{{ isEditMode ? 'Edit Customer' : 'Add Customer' }}</h2>
+
+<mat-dialog-content>
+  @if (loading()) {
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  }
+
+  <div class="form-grid">
+    <mat-form-field appearance="outline">
+      <mat-label>Name</mat-label>
+      <input matInput [formField]="customerForm.name" placeholder="Enter customer name" />
+      @if (customerForm.name().touched()) {
+        @for (error of customerForm.name().errors(); track error.kind) {
+          <mat-error>{{ error.message }}</mat-error>
+        }
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Phone</mat-label>
+      <input matInput [formField]="customerForm.phone" placeholder="Enter phone number" />
+      @if (customerForm.phone().touched()) {
+        @for (error of customerForm.phone().errors(); track error.kind) {
+          <mat-error>{{ error.message }}</mat-error>
+        }
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Email</mat-label>
+      <input matInput [formField]="customerForm.email" placeholder="Enter email address" />
+      @if (customerForm.email().touched()) {
+        @for (error of customerForm.email().errors(); track error.kind) {
+          <mat-error>{{ error.message }}</mat-error>
+        }
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Address</mat-label>
+      <textarea
+        matInput
+        [formField]="customerForm.address"
+        placeholder="Enter address"
+        rows="3"
+      ></textarea>
+      @if (customerForm.address().touched()) {
+        @for (error of customerForm.address().errors(); track error.kind) {
+          <mat-error>{{ error.message }}</mat-error>
+        }
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Description</mat-label>
+      <textarea
+        matInput
+        [formField]="customerForm.description"
+        placeholder="Enter description"
+        rows="3"
+      ></textarea>
+      @if (customerForm.description().touched()) {
+        @for (error of customerForm.description().errors(); track error.kind) {
+          <mat-error>{{ error.message }}</mat-error>
+        }
+      }
+    </mat-form-field>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="cancel()" [disabled]="saving()">Cancel</button>
+  <button
+    mat-flat-button
+    color="primary"
+    (click)="save()"
+    [disabled]="!customerForm().valid || saving() || loading()"
+  >
+    @if (saving()) {
+      <mat-progress-spinner diameter="18" mode="indeterminate"></mat-progress-spinner>
+    } @else {
+      {{ isEditMode ? 'Update' : 'Save' }}
+    }
+  </button>
+</mat-dialog-actions>
