@@ -11,6 +11,7 @@ import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatProgressBar } from '@angular/material/progress-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { CustomerForm } from '../customer-form/customer-form';
+import { ToastService } from '../../../shared/services/toast.service';
 
 @Component({
   selector: 'app-customer-grid',
@@ -35,6 +36,7 @@ export class CustomerGrid {
   private customerService = inject(CustomerService);
   private appState = inject(AppState);
   private dialog = inject(MatDialog);
+  private toastService = inject(ToastService);
 
   customerList = new MatTableDataSource<CustomerResponse>([]);
   customerCols: string[] = ['name', 'phone', 'email', 'description', 'actions'];
@@ -86,5 +88,17 @@ export class CustomerGrid {
     });
   }
 
-  deleteCustomer(customerId: number): void {}
+  deleteCustomer(customerId: number): void {
+    if (!confirm('Are you sure you want to delete this customer?')) return;
+
+    this.customerService.delete(customerId).subscribe({
+      next: (res) => {
+        if (res) {
+          this.toastService.success('Customer deleted');
+          this.getCustomerList();
+        }
+      },
+      error: () => this.toastService.error('Failed to delete customer'),
+    });
+  }
 }
