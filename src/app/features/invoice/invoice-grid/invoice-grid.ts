@@ -11,6 +11,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { InvoiceForm } from '../invoice-form/invoice-form';
 import { MatProgressBar } from '@angular/material/progress-bar';
 import { InvoiceService } from '../invoice.service';
+import { ToastService } from '../../../shared/services/toast.service';
 
 @Component({
   selector: 'app-invoice-grid',
@@ -35,6 +36,7 @@ export class InvoiceGrid {
   private appState = inject(AppState);
   private dialog = inject(MatDialog);
   private invoiceService = inject(InvoiceService);
+  private toastService = inject(ToastService);
 
   invoiceList = new MatTableDataSource<InvoiceListResponse>([]);
   invoiceCols: string[] = ['invoiceNumber', 'customerName', 'date', 'amount', 'actions'];
@@ -88,7 +90,19 @@ export class InvoiceGrid {
     });
   }
 
-  deleteInvoice(invoiceId: number): void {}
+  deleteInvoice(invoiceId: number): void {
+    if (!confirm('Are you sure you want to delete this invoice?')) return;
+
+    this.invoiceService.delete(invoiceId).subscribe({
+      next: (res) => {
+        if (res) {
+          this.toastService.success('Invoice deleted');
+          this.getInvoiceList();
+        }
+      },
+      error: () => this.toastService.error('Failed to delete invoice'),
+    });
+  }
 
   downloadInvoice(invoiceId: number) {
     this.invoiceService.downloadPdf(invoiceId).subscribe((blob) => {
