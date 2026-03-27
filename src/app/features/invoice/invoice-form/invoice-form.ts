@@ -25,6 +25,8 @@ import {
 } from '../invoice.model';
 import { ToastService } from '../../../shared/services/toast.service';
 import { MatProgressBar } from '@angular/material/progress-bar';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 
 @Component({
   selector: 'app-invoice-form',
@@ -45,6 +47,7 @@ import { MatProgressBar } from '@angular/material/progress-bar';
     MatProgressSpinner,
     MatSelectModule,
     MatProgressBar,
+    MatDatepickerModule,
   ],
   templateUrl: './invoice-form.html',
   styleUrl: './invoice-form.css',
