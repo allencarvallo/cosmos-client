@@ -1,5 +1,6 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, Inject, inject, signal } from '@angular/core';
 import {
+  MAT_DIALOG_DATA,
   MatDialogActions,
   MatDialogContent,
   MatDialogRef,
@@ -13,6 +14,7 @@ import { MatButton } from '@angular/material/button';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { CreateCustomerRequest, CustomerFormModel } from '../customer.model';
 import { ToastService } from '../../../shared/services/toast.service';
+import { MatProgressBar } from '@angular/material/progress-bar';
 
 @Component({
   selector: 'app-customer-form',
@@ -27,6 +29,7 @@ import { ToastService } from '../../../shared/services/toast.service';
     MatInput,
     MatButton,
     MatProgressSpinner,
+    MatProgressBar,
   ],
   templateUrl: './customer-form.html',
   styleUrl: './customer-form.css',
@@ -37,6 +40,7 @@ export class CustomerForm {
   private toastService = inject(ToastService);
 
   saving = signal(false);
+  loading = signal(false);
 
   customerModel = signal<CustomerFormModel>({
     name: '',
@@ -54,6 +58,34 @@ export class CustomerForm {
     maxLength(path.description, 500, { message: 'Description cannot exceed 500 characters' });
   });
 
+  constructor(@Inject(MAT_DIALOG_DATA) public data: { customerId: number } | null) {}
+
+  get isEditMode(): boolean {
+    return !!this.data?.customerId;
+  }
+
+  ngOnInit(): void {
+    if (this.isEditMode) {
+      this.loadCustomer(this.data!.customerId);
+    }
+  }
+
+  private loadCustomer(customerId: number): void {
+    this.loading.set(true);
+    this.customerService.getById(customerId).subscribe({
+      next: (customer) => {
+        this.customerModel.set({
+          name: customer.name,
+          phone: customer.phone,
+          email: customer.email,
+          description: customer.description,
+        });
+        this.loading.set(false);
+      },
+      error: () => this.loading.set(false),
+    });
+  }
+
   save() {
     if (!this.customerForm().valid) return;
 
@@ -66,10 +98,17 @@ export class CustomerForm {
     };
 
     this.saving.set(true);
-    this.customerService.create(req).subscribe({
+
+    const operation$ = this.isEditMode
+      ? this.customerService.update(this.data!.customerId, req)
+      : this.customerService.create(req);
+
+    operation$.subscribe({
       next: (res: boolean) => {
         if (res) {
-          this.toastService.success('Successfully added');
+          this.toastService.success(
+            this.isEditMode ? 'Successfully updated' : 'Successfully added',
+          );
         }
         this.saving.set(false);
         this.dialogRef.close();

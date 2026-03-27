@@ -1,6 +1,10 @@
-<h2 mat-dialog-title>Add Customer</h2>
+<h2 mat-dialog-title>{{ isEditMode ? 'Edit Customer' : 'Add Customer' }}</h2>
 
 <mat-dialog-content>
+  @if (loading()) {
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  }
+
   <div class="form-grid">
     <mat-form-field appearance="outline">
       <mat-label>Name</mat-label>
@@ -55,12 +59,12 @@
     mat-flat-button
     color="primary"
     (click)="save()"
-    [disabled]="!customerForm().valid || saving()"
+    [disabled]="!customerForm().valid || saving() || loading()"
   >
     @if (saving()) {
       <mat-progress-spinner diameter="18" mode="indeterminate"></mat-progress-spinner>
     } @else {
-      Save
+      {{ isEditMode ? 'Update' : 'Save' }}
     }
   </button>
 </mat-dialog-actions>

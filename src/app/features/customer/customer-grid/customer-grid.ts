@@ -74,7 +74,17 @@ export class CustomerGrid {
     });
   }
 
-  editCustomer(element: any): void {}
+  editCustomer(element: CustomerResponse): void {
+    const dialogRef = this.dialog.open(CustomerForm, {
+      width: '560px',
+      disableClose: true,
+      data: { customerId: element.customerId },
+    });
+
+    dialogRef.afterClosed().subscribe(() => {
+      this.getCustomerList();
+    });
+  }
 
   deleteCustomer(customerId: number): void {}
 }
