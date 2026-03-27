@@ -75,7 +75,18 @@ export class InvoiceGrid {
     });
   }
 
-  editInvoice(element: any): void {}
+  editInvoice(element: InvoiceListResponse): void {
+    const dialogRef = this.dialog.open(InvoiceForm, {
+      width: '800px',
+      maxWidth: '95vw',
+      disableClose: true,
+      data: { invoiceId: element.invoiceId },
+    });
+
+    dialogRef.afterClosed().subscribe(() => {
+      this.getInvoiceList();
+    });
+  }
 
   deleteInvoice(invoiceId: number): void {}
 

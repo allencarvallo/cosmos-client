@@ -1,7 +1,8 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, Inject, inject, signal } from '@angular/core';
 import { form, FormField, min, required } from '@angular/forms/signals';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import {
+  MAT_DIALOG_DATA,
   MatDialogActions,
   MatDialogContent,
   MatDialogRef,
@@ -23,6 +24,7 @@ import {
   InvoiceItemFormModel,
 } from '../invoice.model';
 import { ToastService } from '../../../shared/services/toast.service';
+import { MatProgressBar } from '@angular/material/progress-bar';
 
 @Component({
   selector: 'app-invoice-form',
@@ -42,6 +44,7 @@ import { ToastService } from '../../../shared/services/toast.service';
     MatDivider,
     MatProgressSpinner,
     MatSelectModule,
+    MatProgressBar,
   ],
   templateUrl: './invoice-form.html',
   styleUrl: './invoice-form.css',
@@ -54,6 +57,7 @@ export class InvoiceForm {
 
   customers = signal<CustomerResponse[]>([]);
   saving = signal(false);
+  loading = signal(false);
 
   invoiceModel = signal<InvoiceFormModel>({
     invoiceDate: new Date().toISOString().split('T')[0],
@@ -71,9 +75,42 @@ export class InvoiceForm {
     min(path.invoiceAmount, 0.01, { message: 'Amount must be greater than 0' });
   });
 
+  constructor(@Inject(MAT_DIALOG_DATA) public data: { invoiceId: number } | null) {}
+
+  get isEditMode(): boolean {
+    return !!this.data?.invoiceId;
+  }
+
   ngOnInit() {
     this.customerService.getAll().subscribe({
       next: (data) => this.customers.set(data),
+    });
+
+    if (this.isEditMode) {
+      this.loadInvoice(this.data!.invoiceId);
+    }
+  }
+
+  private loadInvoice(invoiceId: number) {
+    this.loading.set(true);
+    this.invoiceService.getById(invoiceId).subscribe({
+      next: (invoice) => {
+        this.invoiceModel.set({
+          invoiceDate: invoice.invoiceDate,
+          invoiceAmount: invoice.invoiceAmount,
+          customerId: invoice.customerId,
+        });
+        this.invoiceItems.set(
+          invoice.invoiceItems.map((item) => ({
+            description: item.description,
+            quantity: item.quantity,
+            rate: item.rate,
+            amount: item.amount,
+          })),
+        );
+        this.loading.set(false);
+      },
+      error: () => this.loading.set(false),
     });
   }
 
@@ -119,13 +156,20 @@ export class InvoiceForm {
     };
 
     this.saving.set(true);
-    this.invoiceService.create(req).subscribe({
+
+    const operation$ = this.isEditMode
+      ? this.invoiceService.update(this.data!.invoiceId, req)
+      : this.invoiceService.create(req);
+
+    operation$.subscribe({
       next: (res: boolean) => {
         if (res) {
-          this.toastService.success('Successfully added');
+          this.toastService.success(
+            this.isEditMode ? 'Successfully updated' : 'Successfully added',
+          );
         }
         this.saving.set(false);
-        this.dialogRef.close();
+        this.dialogRef.close(true);
       },
       error: () => this.saving.set(false),
     });

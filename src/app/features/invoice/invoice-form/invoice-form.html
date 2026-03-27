@@ -1,11 +1,13 @@
-<h2 mat-dialog-title>Add Invoice</h2>
+<h2 mat-dialog-title>{{ isEditMode ? 'Edit Invoice' : 'Add Invoice' }}</h2>
 
 <mat-dialog-content>
-  <div class="form-wrapper">
+  @if (loading()) {
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  }
 
+  <div class="form-wrapper">
     <!-- Invoice Header -->
     <div class="form-grid">
-
       <mat-form-field appearance="outline">
         <mat-label>Customer</mat-label>
         <mat-select [formField]="invoiceForm.customerId">
@@ -29,7 +31,6 @@
           }
         }
       </mat-form-field>
-
     </div>
 
     <mat-divider></mat-divider>
@@ -53,7 +54,6 @@
 
       @for (item of invoiceItems(); track $index) {
         <div class="item-row">
-
           <mat-form-field appearance="outline" class="col-desc">
             <input
               matInput
@@ -86,13 +86,7 @@
           </mat-form-field>
 
           <mat-form-field appearance="outline" class="col-num">
-            <input
-              matInput
-              type="number"
-              placeholder="Amount"
-              [value]="item.amount"
-              readonly
-            />
+            <input matInput type="number" placeholder="Amount" [value]="item.amount" readonly />
           </mat-form-field>
 
           <button
@@ -105,7 +99,6 @@
           >
             <mat-icon>delete</mat-icon>
           </button>
-
         </div>
       }
     </div>
@@ -115,7 +108,6 @@
       <span class="total-label">Total Amount</span>
       <span class="total-value">₹{{ invoiceModel().invoiceAmount.toFixed(2) }}</span>
     </div>
-
   </div>
 </mat-dialog-content>
 
@@ -125,12 +117,12 @@
     mat-flat-button
     color="primary"
     (click)="save()"
-    [disabled]="invoiceForm().invalid() || invoiceItems().length === 0 || saving()"
+    [disabled]="invoiceForm().invalid() || invoiceItems().length === 0 || saving() || loading()"
   >
     @if (saving()) {
       <mat-progress-spinner diameter="18" mode="indeterminate"></mat-progress-spinner>
     } @else {
-      Save Invoice
+      {{ isEditMode ? 'Update Invoice' : 'Save Invoice' }}
     }
   </button>
 </mat-dialog-actions>
