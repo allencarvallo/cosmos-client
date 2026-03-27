@@ -46,6 +46,7 @@ export class CustomerForm {
     name: '',
     phone: '',
     email: '',
+    address: '',
     description: '',
   });
 
@@ -55,6 +56,7 @@ export class CustomerForm {
     maxLength(path.phone, 20, { message: 'Phone cannot exceed 20 characters' });
     email(path.email, { message: 'Enter a valid email address' });
     maxLength(path.email, 100, { message: 'Email cannot exceed 100 characters' });
+    maxLength(path.address, 500, { message: 'Address exceed 500 characters' });
     maxLength(path.description, 500, { message: 'Description cannot exceed 500 characters' });
   });
 
@@ -78,6 +80,7 @@ export class CustomerForm {
           name: customer.name,
           phone: customer.phone,
           email: customer.email,
+          address: customer.address,
           description: customer.description,
         });
         this.loading.set(false);
@@ -94,6 +97,7 @@ export class CustomerForm {
       name: model.name,
       phone: model.phone,
       email: model.email,
+      address: model.address,
       description: model.description,
     };
 

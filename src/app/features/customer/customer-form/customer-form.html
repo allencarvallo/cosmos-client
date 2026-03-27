@@ -37,6 +37,21 @@
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Address</mat-label>
+      <textarea
+        matInput
+        [formField]="customerForm.address"
+        placeholder="Enter address"
+        rows="3"
+      ></textarea>
+      @if (customerForm.address().touched()) {
+        @for (error of customerForm.address().errors(); track error.kind) {
+          <mat-error>{{ error.message }}</mat-error>
+        }
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
       <mat-label>Description</mat-label>
       <textarea
         matInput

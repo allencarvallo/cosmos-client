@@ -3,6 +3,7 @@ export interface CustomerResponse {
   name: string;
   phone: string;
   email: string;
+  address: string;
   description: string;
 }
 
@@ -10,6 +11,7 @@ export interface CreateCustomerRequest {
   name: string;
   phone: string;
   email: string;
+  address: string;
   description: string;
 }
 
@@ -17,5 +19,6 @@ export interface CustomerFormModel {
   name: string;
   phone: string;
   email: string;
+  address: string;
   description: string;
 }

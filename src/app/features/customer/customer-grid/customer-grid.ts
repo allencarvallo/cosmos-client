@@ -39,7 +39,7 @@ export class CustomerGrid {
   private toastService = inject(ToastService);
 
   customerList = new MatTableDataSource<CustomerResponse>([]);
-  customerCols: string[] = ['name', 'phone', 'email', 'description', 'actions'];
+  customerCols: string[] = ['name', 'phone', 'email', 'address', 'description', 'actions'];
   loading = signal(false);
 
   constructor() {
