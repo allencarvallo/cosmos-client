@@ -11,10 +11,9 @@
   padding: 16px;
 
   .logo-icon {
-    color: var(--mat-primary);
-    font-size: 28px;
-    width: 28px;
-    height: 28px;
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
   }
 
   .logo-text {
