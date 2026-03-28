@@ -1,15 +1,77 @@
+:host {
+  display: block;
+  padding: 24px;
+}
+
+mat-card {
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+}
+
 mat-card-header {
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
-  gap: 8px;
-  padding-bottom: 12px;
+  padding: 16px 16px 12px;
 
-  .spacer { flex: 1 1 auto; }
+  .header-title {
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  .spacer {
+    flex: 1 1 auto;
+  }
+}
+
+mat-card-content {
+  padding: 0 !important;
 }
 
 .table-container {
   overflow-y: auto;
-  max-height: calc(100vh - 200px); 
+  max-height: calc(100vh - 220px);
   width: 100%;
+}
+
+table {
+  width: 100%;
+}
+
+th.mat-header-cell {
+  font-weight: 600;
+  font-size: 13px;
+  color: rgba(0, 0, 0, 0.6);
+  white-space: nowrap;
+}
+
+td.mat-cell {
+  font-size: 14px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+.table-row {
+  transition: background 0.2s ease;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.03);
+    cursor: pointer;
+  }
+}
+
+.actions-cell {
+  text-align: right;
+  white-space: nowrap;
+  width: 100px;
+}
+
+.no-data {
+  text-align: center;
+  padding: 48px 0;
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.4);
+}
+
+mat-progress-bar {
+  border-radius: 0;
 }
